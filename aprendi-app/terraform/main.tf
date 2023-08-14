@@ -31,7 +31,7 @@ module "aprendi_cloudfront" {
   source                     = "./cloudfront"
   website_bucket_id          = module.aprendi_website_bucket.website_bucket_id
   website_bucket_domain_name = module.aprendi_website_bucket.website_bucket_domain_name
-  ssl_certificate_arn        = data.terraform_remote_state.main.outputs.east_ssl_certifcate_arn
+  ssl_certificate_arn        = data.terraform_remote_state.main.outputs.ssl_east_certifcate_arn
   aws_region                 = data.terraform_remote_state.main.outputs.aws_region
   zone_id                    = data.terraform_remote_state.main.outputs.zone_id
   depends_on                 = [module.aprendi_website_bucket]
