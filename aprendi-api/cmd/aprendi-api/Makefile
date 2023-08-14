@@ -9,16 +9,16 @@ test:
 	go test ./...
 
 build: test
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o florentia-api-exe .
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o aprendi-api-exe .
 
 run: build
 	go run .
 
 push: build
 	mkdir ./build
-	cp ./florentia-api-exe ./build/florentia-api-exe
-	cd build && zip -r florentia-api.zip .
-	cd build && aws s3 cp florentia-api.zip s3://florentia-lambda-functions/florentia-api/${GITHUB_SHA}/florentia-api.zip
+	cp ./aprendi-api-exe ./build/aprendi-api-exe
+	cd build && zip -r aprendi-api.zip .
+	cd build && aws s3 cp aprendi-api.zip s3://aprendi-lambda-functions/aprendi-api/${GITHUB_SHA}/aprendi-api.zip
 
 generate-jwt-keys:
 	ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key

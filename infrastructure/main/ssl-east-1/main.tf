@@ -8,9 +8,9 @@ variable "zone_id" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name               = "*.florentia.academy"
+  domain_name               = "*.aprendi.org"
   validation_method         = "DNS"
-  subject_alternative_names = ["florentia.academy"]
+  subject_alternative_names = ["aprendi.org"]
   lifecycle {
     create_before_destroy = true
   }

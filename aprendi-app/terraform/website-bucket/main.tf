@@ -1,7 +1,7 @@
 # /website-bucket/main.tf
 # This template creates an S3 bucket for the website and uploads the index.html and error.html files to it.
 resource "aws_s3_bucket" "website" {
-  bucket = "home.florentia.academy"
+  bucket = "home.aprendi.org"
 }
 
 resource "aws_s3_bucket_website_configuration" "website_config" {

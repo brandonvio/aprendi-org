@@ -1,4 +1,4 @@
-module github.com/brandonvio/florentia.academy
+module github.com/brandonvio/aprendi.org
 
 go 1.19
 

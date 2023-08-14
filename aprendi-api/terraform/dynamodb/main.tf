@@ -5,16 +5,16 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "florentia-academy-terraform-state"
-    key            = "infrastructure/dynamodb/florentia_academy_db/terraform.tfstate"
+    bucket         = "aprendi-org-terraform-state"
+    key            = "infrastructure/dynamodb/aprendi_org_db/terraform.tfstate"
     region         = "us-west-2"
-    dynamodb_table = "florentia_terraform_locks"
+    dynamodb_table = "aprendi_terraform_locks"
     encrypt        = true
   }
 }
 
-resource "aws_dynamodb_table" "florentia_academy_db" {
-  name         = "florentia_academy_db"
+resource "aws_dynamodb_table" "aprendi_org_db" {
+  name         = "aprendi_org_db"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "pk"
   range_key    = "sk"
@@ -30,10 +30,10 @@ resource "aws_dynamodb_table" "florentia_academy_db" {
   }
 
   tags = {
-    Name = "florentia_academy_db"
+    Name = "aprendi_org_db"
   }
 }
 
 output "dynamodb_table_arn" {
-  value = aws_dynamodb_table.florentia_academy_db.arn
+  value = aws_dynamodb_table.aprendi_org_db.arn
 }

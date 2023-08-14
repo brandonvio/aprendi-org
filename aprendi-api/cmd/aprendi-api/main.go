@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
-	"github.com/brandonvio/florentia.academy/cmd/florentia-api/docs"
+	"github.com/brandonvio/aprendi.org/cmd/aprendi-api/docs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,7 +36,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 }
 
 func main() {
-	log.Println("starting up ##GIN## __florentia-api__")
+	log.Println("starting up ##GIN## __aprendi-api__")
 	g := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
@@ -53,11 +53,11 @@ func main() {
 
 	env := os.Getenv("GIN_MODE")
 	if env == "release" {
-		log.Println("starting up gin ##LAMBDA## for florentia-api")
+		log.Println("starting up gin ##LAMBDA## for aprendi-api")
 		ginLambda = ginadapter.New(g)
 		lambda.Start(Handler)
 	} else {
-		log.Println("starting up gin ##SERVER## for florentia-api")
+		log.Println("starting up gin ##SERVER## for aprendi-api")
 		g.Run(":8090")
 	}
 }

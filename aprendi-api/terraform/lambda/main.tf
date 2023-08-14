@@ -25,11 +25,11 @@ variable "account_id" {
   type        = string
 }
 
-resource "aws_lambda_function" "florentia_api" {
-  function_name = "florentia_api"
+resource "aws_lambda_function" "aprendi_api" {
+  function_name = "aprendi_api"
   s3_bucket     = var.bucket
-  s3_key        = "florentia-api/${var.github_sha}/florentia-api.zip"
-  handler       = "florentia-api-exe"
+  s3_key        = "aprendi-api/${var.github_sha}/aprendi-api.zip"
+  handler       = "aprendi-api-exe"
   runtime       = "go1.x"
   role          = var.lambda_exec_arn
   environment {
@@ -41,30 +41,30 @@ resource "aws_lambda_function" "florentia_api" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
-  name              = "/aws/lambda/${aws_lambda_function.florentia_api.function_name}"
+  name              = "/aws/lambda/${aws_lambda_function.aprendi_api.function_name}"
   retention_in_days = 14 # adjust this to fit your requirements
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.florentia_api.function_name
+  function_name = aws_lambda_function.aprendi_api.function_name
   principal     = "logs.${var.region}.amazonaws.com"
-  source_arn    = "arn:aws:logs:${var.region}:${var.account_id}:log-group:/aws/lambda/${aws_lambda_function.florentia_api.function_name}:*"
+  source_arn    = "arn:aws:logs:${var.region}:${var.account_id}:log-group:/aws/lambda/${aws_lambda_function.aprendi_api.function_name}:*"
 }
 
 
 # output the lambda function ARN
-output "florentia_api_lambda_function_arn" {
-  value = aws_lambda_function.florentia_api.arn
+output "aprendi_api_lambda_function_arn" {
+  value = aws_lambda_function.aprendi_api.arn
 }
 
 # output the invoke arn
-output "florentia_api_lambda_invoke_arn" {
-  value = aws_lambda_function.florentia_api.invoke_arn
+output "aprendi_api_lambda_invoke_arn" {
+  value = aws_lambda_function.aprendi_api.invoke_arn
 }
 
-output "florentia_api_lambda_function_name" {
-  value = aws_lambda_function.florentia_api.function_name
+output "aprendi_api_lambda_function_name" {
+  value = aws_lambda_function.aprendi_api.function_name
 }
 

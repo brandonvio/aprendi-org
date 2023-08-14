@@ -21,7 +21,7 @@ variable "zone_id" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
-  comment = "access-identity-home-florentia-academy"
+  comment = "access-identity-home-aprendi-org"
 }
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
@@ -33,7 +33,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
-  aliases             = ["florentia.academy"]
+  aliases             = ["aprendi.org"]
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
@@ -71,7 +71,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 resource "aws_route53_record" "root" {
-  name    = "florentia.academy"
+  name    = "aprendi.org"
   type    = "A"
   zone_id = var.zone_id
   alias {

@@ -1,11 +1,11 @@
-name: 'florentia-api-workflow'
+name: 'aprendi-api-workflow'
 
 on:
   push:
     branches:
       - main
     paths:
-      - florentia-api/**
+      - aprendi-api/**
 
 jobs:
   build-and-deploy:
@@ -27,10 +27,10 @@ jobs:
             terraform_version: 1.0.3
         
         - name: build and push to S3
-          working-directory: florentia-api/cmd/florentia-api
+          working-directory: aprendi-api/cmd/aprendi-api
           run: make push
 
         - name: user-api - apply terraform
-          working-directory: florentia-api/terraform
+          working-directory: aprendi-api/terraform
           run: make deploy
         

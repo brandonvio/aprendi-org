@@ -3,14 +3,14 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "florentia-academy-terraform-state"
+  bucket = "aprendi-org-terraform-state"
 
   lifecycle {
     prevent_destroy = true
   }
 
   tags = {
-    Name = "florentia-terraform-state"
+    Name = "aprendi-terraform-state"
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse_config" {
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "florentia_terraform_locks"
+  name         = "aprendi_terraform_locks"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -43,6 +43,6 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 
   tags = {
-    Name = "florentia_terraform_locks"
+    Name = "aprendi_terraform_locks"
   }
 }

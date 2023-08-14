@@ -14,7 +14,7 @@ class SingleTableModel(Model):
         """
         This class defines the metadata for the DynamoDB table.
         """
-        table_name = "florentia_academy_db"
+        table_name = "aprendi_org_db"
         region = 'us-west-2'
         host = "http://localhost:8000"
     pk = UnicodeAttribute(hash_key=True)
@@ -32,7 +32,8 @@ def seed_students():
     reader = get_reader("students.csv")
     for row in reader:
         id, last, first, dob = row
-        student = SingleTableModel(pk=SingleTableModel.semester_schedule_pk(id), sk=SingleTableModel.semester_schedule_sk())
+        student = SingleTableModel(pk=SingleTableModel.semester_schedule_pk(
+            id), sk=SingleTableModel.semester_schedule_sk())
         data = {
             "first": first,
             "last": last,

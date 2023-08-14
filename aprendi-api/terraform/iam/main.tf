@@ -20,17 +20,17 @@ data "aws_iam_policy_document" "lambda_exec" {
   }
 }
 
-resource "aws_iam_role" "florentia_lambda_exec" {
-  name               = "florentia_lambda_exec"
+resource "aws_iam_role" "aprendi_lambda_exec" {
+  name               = "aprendi_lambda_exec"
   assume_role_policy = data.aws_iam_policy_document.lambda_exec.json
 }
 
 resource "aws_iam_role_policy_attachment" "attach_lambda_basic_execution" {
-  role       = aws_iam_role.florentia_lambda_exec.name
+  role       = aws_iam_role.aprendi_lambda_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-data "aws_iam_policy_document" "florentia_dynamodb_access" {
+data "aws_iam_policy_document" "aprendi_dynamodb_access" {
   statement {
     effect = "Allow"
 
@@ -49,17 +49,17 @@ data "aws_iam_policy_document" "florentia_dynamodb_access" {
   }
 }
 
-resource "aws_iam_policy" "florentia_dynamodb_access" {
-  name   = "FlorentiaDynamoDBAccessPolicy"
-  policy = data.aws_iam_policy_document.florentia_dynamodb_access.json
+resource "aws_iam_policy" "aprendi_dynamodb_access" {
+  name   = "aprendiDynamoDBAccessPolicy"
+  policy = data.aws_iam_policy_document.aprendi_dynamodb_access.json
 }
 
-resource "aws_iam_role_policy_attachment" "florentia_dynamodb_access" {
-  role       = aws_iam_role.florentia_lambda_exec.name
-  policy_arn = aws_iam_policy.florentia_dynamodb_access.arn
+resource "aws_iam_role_policy_attachment" "aprendi_dynamodb_access" {
+  role       = aws_iam_role.aprendi_lambda_exec.name
+  policy_arn = aws_iam_policy.aprendi_dynamodb_access.arn
 }
 
 # output the role arn so it can be used by the lambda function
 output "lambda_exec_arn" {
-  value = aws_iam_role.florentia_lambda_exec.arn
+  value = aws_iam_role.aprendi_lambda_exec.arn
 }
