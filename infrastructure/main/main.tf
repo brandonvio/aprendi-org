@@ -12,25 +12,34 @@ terraform {
   }
 }
 
+locals {
+  root_name   = "aprendi"
+  root_domain = "aprendi.org"
+}
+
 data "aws_caller_identity" "current" {}
 
-module "aprendi_dns" {
-  source = "./dns"
+module "dns" {
+  source      = "./dns"
+  root_domain = local.root_domain
 }
 
-module "aprendi_ssl" {
-  source  = "./ssl-east-1"
-  zone_id = module.aprendi_dns.zone_id
+module "ssl_east1" {
+  source      = "./ssl-east-1"
+  zone_id     = module.dns.zone_id
+  root_domain = local.root_domain
 }
 
-module "aprendi_ssl_west" {
-  source  = "./ssl-west-2"
-  zone_id = module.aprendi_dns.zone_id
+module "ssl_west2" {
+  source      = "./ssl-west-2"
+  zone_id     = module.dns.zone_id
+  root_domain = local.root_domain
 }
 
 # import the s3 module
-module "aprendi_s3" {
-  source = "./s3"
+module "s3" {
+  source    = "./s3"
+  root_name = local.root_name
 }
 
 output "aws_region" {
@@ -38,20 +47,20 @@ output "aws_region" {
 }
 
 # output the s3 bucket name
-output "aprendi_lambda_functions_bucket_name" {
-  value = module.aprendi_s3.aprendi_lambda_functions_bucket_name
+output "builds_bucket_name" {
+  value = module.s3.builds_bucket_name
 }
 
-output "east_ssl_certifcate_arn" {
-  value = module.aprendi_ssl.certificate_arn
+output "ssl_east_certifcate_arn" {
+  value = module.ssl_east1.certificate_arn
 }
 
-output "west_ssl_certifcate_arn" {
-  value = module.aprendi_ssl_west.certificate_arn
+output "ssl_west_certifcate_arn" {
+  value = module.ssl_west2.certificate_arn
 }
 
 output "zone_id" {
-  value = module.aprendi_dns.zone_id
+  value = module.dns.zone_id
 }
 
 output "account_id" {

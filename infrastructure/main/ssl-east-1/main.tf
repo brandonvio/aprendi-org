@@ -7,10 +7,15 @@ variable "zone_id" {
   type        = string
 }
 
+variable "root_domain" {
+  description = "The root domain for the hosted zone"
+  type        = string
+}
+
 resource "aws_acm_certificate" "cert" {
-  domain_name               = "*.aprendi.org"
+  domain_name               = "*.${var.root_domain}"
   validation_method         = "DNS"
-  subject_alternative_names = ["aprendi.org"]
+  subject_alternative_names = [var.root_domain]
   lifecycle {
     create_before_destroy = true
   }
