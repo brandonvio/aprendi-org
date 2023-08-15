@@ -47,6 +47,13 @@ class TermScheduleRepo():
         return f"TEACHER#{teacher_id}#PERIOD#{period_number}"
 
     @staticmethod
+    def teacher_sk(teacher_id: str):
+        """
+        This method returns the sk for the TermSchedule
+        """
+        return f"TEACHER#{teacher_id}"
+
+    @staticmethod
     def period_course_sk(period_number: str, course_id: str):
         """
         This method returns the sk for the TermSchedule
@@ -129,4 +136,14 @@ class TermScheduleRepo():
         pk = cls.term_pk(org_id=org_id, term_id=term_id)
         sk = cls.teacher_period_sk(period_number=period, teacher_id=teacher_id)
         items = OrganizationDataTable.local_secondary_index1.query(pk, OrganizationDataTable.lsi_sk1 == sk)
+        return [cls.parse_term(item) for item in items]
+
+    @classmethod
+    def get_by_teacher_id(cls, org_id: str, term_id: str, teacher_id: str) -> TermScheduleModel:
+        """
+        This will tell us if a teacher has already been scheduled for a period.
+        """
+        pk = cls.term_pk(org_id=org_id, term_id=term_id)
+        sk = cls.teacher_sk(teacher_id=teacher_id)
+        items = OrganizationDataTable.local_secondary_index1.query(pk, OrganizationDataTable.lsi_sk1.startswith(sk))
         return [cls.parse_term(item) for item in items]

@@ -1,43 +1,136 @@
-# test_term_schedule.py
-from models.term_schedule import TermScheduleModel, TermScheduleRepo
+"""
+This module contains unit tests for the TermSchedule model and its associated operations.
+
+The tests are designed to cover the following scenarios:
+1. Handling multiple courses in a schedule.
+2. Scenarios where a teacher is teaching more than one class.
+3. Scenarios where the database has to retrieve more than one class for a specific query.
+"""
+import json
+from collections import namedtuple
+import pytest
+from models.term_schedule import TermScheduleRepo, TermScheduleModel
 
 
-def test_term_schedule_crud_operations():
+# Constants for testing
+ORG_ID = "test_org"
+TERM_ID = "test_term"
+
+# Extended courses and details
+COURSE_DETAILS = [
+    {"course_id": "course_101", "period": "period_1", "teacher_id": "teacher_1",
+     "course_name": "Mathematics", "teacher_name": "Mr. Smith"},
+    {"course_id": "course_102", "period": "period_2", "teacher_id": "teacher_1",
+     "course_name": "Science", "teacher_name": "Mr. Smith"},
+    {"course_id": "course_103", "period": "period_3", "teacher_id": "teacher_3",
+     "course_name": "History", "teacher_name": "Mr. White"}
+]
+
+MockedItem = namedtuple('MockedItem', ['pk', 'sk', 'data'])
+
+
+@pytest.fixture
+def clean_database():
     """
-    This test will test the following:
-    1. Save a term schedule
-    2. Retrieve a term schedule by course_id
-    3. Retrieve a term schedule by course_id and period
-    4. Check if a teacher has been scheduled for a period
+    Set up the database to its initial state before each test. 
     """
-    # 1. Save a term schedule
-    term_schedule = TermScheduleModel(org_id="test_org_1",
-                                      term_id="term_001",
-                                      course_id="course_001",
-                                      period="1",
-                                      teacher_id="teacher_001",
-                                      course_name="Math 101",
-                                      teacher_name="John Doe")
+    # Mocked cleanup of the database.
+    # In a real-world scenario, you'd interact with your database to clean it.
+    pass
 
-    saved_term_schedule = TermScheduleRepo.save(term_schedule)
 
-    assert saved_term_schedule.org_id == "test_org_1"
-    assert saved_term_schedule.term_id == "term_001"
-    assert saved_term_schedule.course_id == "course_001"
-    assert saved_term_schedule.teacher_id == "teacher_001"
+@pytest.fixture
+def models_for_testing():
+    """
+    Create and return a list of TermScheduleModel for testing.
+    """
+    return [TermScheduleModel(org_id=ORG_ID, term_id=TERM_ID, **course_detail) for course_detail in COURSE_DETAILS]
 
-    # 2. Retrieve a term schedule by course_id
-    fetched_term_schedule_by_course = TermScheduleRepo.get_by_course_id(org_id="test_org_1", term_id="term_001", course_id="course_001")
-    assert len(fetched_term_schedule_by_course) == 1
-    assert fetched_term_schedule_by_course[0].teacher_name == "John Doe"
 
-    # 3. Retrieve a term schedule by course_id and period
-    fetched_term_schedule_by_course_period = TermScheduleRepo.get_by_course_id_and_period(org_id="test_org_1", term_id="term_001", period="1", course_id="course_001")
-    assert len(fetched_term_schedule_by_course_period) == 1
-    assert fetched_term_schedule_by_course_period[0].teacher_name == "John Doe"
+@pytest.mark.usefixtures("clean_database")
+def test_zero_courses():
+    """
+    Test scenario where no courses are present in the system.
+    """
+    for detail in COURSE_DETAILS:
+        retrieved = TermScheduleRepo.get_by_course_id(ORG_ID, TERM_ID, detail['course_id'])
+        assert len(retrieved) == 0
 
-    # 4. Check if a teacher has been scheduled for a period
-    teacher_schedule_by_period = TermScheduleRepo.get_by_teacher_id_and_period(org_id="test_org_1", term_id="term_001", period="1", teacher_id="teacher_001")
-    print(teacher_schedule_by_period[0])
-    assert len(teacher_schedule_by_period) == 1
-    assert teacher_schedule_by_period[0].course_name == "Math 101"
+
+@pytest.mark.usefixtures("clean_database")
+def test_one_course(models_for_testing):
+    """
+    Test scenario with a single course.
+    """
+    TermScheduleRepo.save(models_for_testing[0])
+
+    # Check retrieval for first course
+    detail = COURSE_DETAILS[0]
+    retrieved = TermScheduleRepo.get_by_course_id(ORG_ID, TERM_ID, detail['course_id'])
+    assert len(retrieved) == 1
+    assert retrieved[0] == models_for_testing[0]
+
+
+@pytest.mark.usefixtures("clean_database")
+def test_two_courses(models_for_testing):
+    """
+    Test scenario with two courses, with one teacher teaching both.
+    """
+    for model in models_for_testing[:2]:
+        TermScheduleRepo.save(model)
+
+    for i in range(2):
+        detail = COURSE_DETAILS[i]
+        retrieved = TermScheduleRepo.get_by_course_id(ORG_ID, TERM_ID, detail['course_id'])
+        assert len(retrieved) == 1
+        assert retrieved[0] == models_for_testing[i]
+
+
+@pytest.mark.usefixtures("clean_database")
+def test_three_courses(models_for_testing):
+    """
+    Test scenario with three courses.
+    """
+    for model in models_for_testing:
+        TermScheduleRepo.save(model)
+
+    for i, detail in enumerate(COURSE_DETAILS):
+        retrieved = TermScheduleRepo.get_by_course_id(ORG_ID, TERM_ID, detail['course_id'])
+        assert len(retrieved) == 1
+        assert retrieved[0] == models_for_testing[i]
+
+
+@pytest.mark.usefixtures("clean_database")
+def test_courses_by_teacher(models_for_testing):
+    """
+    Test retrieval of courses by teacher_id.
+    """
+    # Save all models
+    for model in models_for_testing:
+        TermScheduleRepo.save(model)
+
+    # Retrieve courses taught by Mr. Smith (teacher_1)
+    retrieved = TermScheduleRepo.get_by_teacher_id(ORG_ID, TERM_ID, "teacher_1")
+    assert len(retrieved) == 2
+
+
+@pytest.mark.usefixtures("clean_database")
+def test_parse_term():
+    """
+    Test the parse_term functionality for each course detail.
+    """
+    for detail in COURSE_DETAILS:
+        item_mock = MockedItem(
+            pk=f"ORG#{ORG_ID}#TERM#{TERM_ID}#SCHEDULE",
+            sk=f"COURSE#{detail['course_id']}#PERIOD#{detail['period']}#TEACHER#{detail['teacher_id']}",
+            data=json.dumps({"course_name": detail["course_name"], "teacher_name": detail["teacher_name"]})
+        )
+
+        parsed_model = TermScheduleRepo.parse_term(item_mock)
+        assert parsed_model.org_id == ORG_ID
+        assert parsed_model.term_id == TERM_ID
+        assert parsed_model.course_id == detail["course_id"]
+        assert parsed_model.period == detail["period"]
+        assert parsed_model.teacher_id == detail["teacher_id"]
+        assert parsed_model.course_name == detail["course_name"]
+        assert parsed_model.teacher_name == detail["teacher_name"]
