@@ -4,6 +4,7 @@ This script runs the application using a development server.
 import csv
 from dotenv import load_dotenv
 from models.teacher import TeacherRepo, TeacherModel
+from models.student import StudentRepo, StudentModel
 from models.tables import OrganizationTable, OrganizationDataTable
 from models.organization import OrganizationRepo, OrganizationModel
 
@@ -78,6 +79,32 @@ def get_all_teachers(org_id: str):
         print(item)
 
 
+def seed_students(org_id: str):
+    """
+    This seeds the teacher data
+    """
+    reader = get_reader("students.csv")
+    for row in reader:
+        id, last, first, dob = row
+        item = StudentModel(
+            org_id=org_id,
+            first_name=first,
+            last_name=last,
+            dob=dob
+        )
+        item = StudentRepo.save(item)
+        item = StudentRepo.get(org_id=item.org_id, id=item.id)
+        print(item)
+
+
+def get_all_students(org_id: str):
+    """
+    This gets all the teachers
+    """
+    for item in TeacherRepo.get_all(org_id=org_id):
+        print(item)
+
+
 if __name__ == '__main__':
     empty_data_table()
     _org = OrganizationModel(id="FLA", name="Florentia Academy")
@@ -85,3 +112,4 @@ if __name__ == '__main__':
     get_all_organizations()
     seed_teachers(org_id=_org.id)
     get_all_teachers(org_id=_org.id)
+    seed_students(org_id=_org.id)
