@@ -14,12 +14,6 @@ class OrganizationModel(BaseModel):
     id: str
     name: str
 
-    class Config:
-        """
-        This class represents the configuration for the Organization model
-        """
-        from_attributes = True
-
 
 class OrganizationRepo():
     """

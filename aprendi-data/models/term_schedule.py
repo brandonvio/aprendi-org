@@ -2,6 +2,8 @@
 This module contains the TermSchedule model and repo
 """
 import json
+from typing import List, Optional
+from uuid_extensions import uuid7str
 from pydantic import BaseModel
 from models.tables import OrganizationDataTable
 
@@ -10,6 +12,7 @@ class TermScheduleModel(BaseModel):
     """
     This class represents the TermSchedule model
     """
+    term_schedule_id: Optional[str] = None
     org_id: str
     term_id: str
     course_id: str
@@ -78,10 +81,12 @@ class TermScheduleRepo():
             "course_name": model.course_name,
             "teacher_name": model.teacher_name
         }
+        term_schedule_id = uuid7str()
         org = OrganizationDataTable(
             pk=pk,
             sk=sk,
             lsi_sk1=cls.teacher_period_sk(period_number=model.period, teacher_id=model.teacher_id),
+            lsi_sk2=term_schedule_id,
             data=json.dumps(data)
         )
         org.save()  # Saving to the database
@@ -94,11 +99,13 @@ class TermScheduleRepo():
         """
         pk_split = item.pk.split("#")
         sk_split = item.sk.split("#")
+        term_schedule_id = item.lsi_sk2
         org_id, term_id = pk_split[1], pk_split[3]
         course_id, period_number, teacher_id = sk_split[1], sk_split[3], sk_split[5]
         data = json.loads(item.data)
 
         return TermScheduleModel(
+            term_schedule_id=term_schedule_id,
             org_id=org_id,
             term_id=term_id,
             course_id=course_id,
@@ -107,6 +114,16 @@ class TermScheduleRepo():
             course_name=data["course_name"],
             teacher_name=data["teacher_name"]
         )
+
+    @classmethod
+    def get(cls, org_id: str, term_id: str) -> List[TermScheduleModel]:
+        """
+        This will get all the periods available for a course.
+        """
+        pk = cls.term_pk(org_id=org_id, term_id=term_id)
+        # sk = cls.course_sk(course_id=course_id)
+        items = OrganizationDataTable.query(pk)
+        return [cls.parse_term(item) for item in items]
 
     @classmethod
     def get_by_course_id(cls, org_id: str, term_id: str, course_id: str) -> TermScheduleModel:

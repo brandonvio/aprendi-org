@@ -40,6 +40,21 @@ class LocalSecondaryIndex1(LocalSecondaryIndex):
     lsi_sk1 = UnicodeAttribute(range_key=True)
 
 
+class LocalSecondaryIndex2(LocalSecondaryIndex):
+    """
+    This class represents a GSI for querying by teacher_id and period.
+    """
+    class Meta:
+        """
+        This class is a meta class for the TeacherPeriodIndex
+        """
+        projection = AllProjection()
+
+    # These attributes are for the GSI's hash and range key
+    pk = UnicodeAttribute(hash_key=True)
+    lsi_sk2 = UnicodeAttribute(range_key=True)
+
+
 class OrganizationDataTable(Model):
     """
     This class is a model for the Aprendi table
@@ -72,8 +87,10 @@ class OrganizationDataTable(Model):
     # other data
     data = UnicodeAttribute(null=True)
 
-    # Connect the GSI to your model
+    # local secondary index 1
     local_secondary_index1 = LocalSecondaryIndex1()
-
-    # gsi for teacher, period
     lsi_sk1 = UnicodeAttribute(null=True)
+
+    # local secondary index 2
+    local_secondary_index2 = LocalSecondaryIndex2()
+    lsi_sk2 = UnicodeAttribute(null=True)

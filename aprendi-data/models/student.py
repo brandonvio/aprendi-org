@@ -3,7 +3,6 @@ This module contains the Student model and repo
 """
 import json
 from typing import Optional
-from uuid_extensions import uuid7str
 from pydantic import BaseModel
 from models.tables import OrganizationDataTable
 
@@ -43,7 +42,6 @@ class StudentRepo():
         """
         This method saves the Student to the database
         """
-        model.id = uuid7str()
         pk = cls.student_pk(org_id=model.org_id)
         sk = cls.student_sk(student_id=model.id)
         data = {

@@ -44,7 +44,6 @@ class TeacherRepo():
         """
         This method saves the Teacher to the database
         """
-        model.id = uuid7str()
         pk = cls.teacher_pk(org_id=model.org_id)
         sk = cls.teacher_sk(teacher_id=model.id)
         data = {

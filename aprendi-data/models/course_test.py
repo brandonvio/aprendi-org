@@ -10,7 +10,7 @@ def test_course_crud_operations():
     3. Get all courses for an organization
     """
     # 1. Save a course
-    course = CourseModel(org_id="test_org_1", name="Mathematics", description="Introduction to Algebra", section="101A")
+    course = CourseModel(id="100", org_id="test_org_1", name="Mathematics", description="Introduction to Algebra", section="101A")
     saved_course = CourseRepo.save(course)
 
     assert saved_course.id is not None

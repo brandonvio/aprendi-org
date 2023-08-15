@@ -10,7 +10,8 @@ def test_teacher_crud_operations():
     3. Get all teachers for an organization
     """
     # 1. Save a teacher
-    teacher = TeacherModel(org_id="test_org_1", first_name="John", last_name="Doe", degree="Masters", dob="1990-01-01")
+    teacher = TeacherModel(id="100", org_id="test_org_1", first_name="John",
+                           last_name="Doe", degree="Masters", dob="1990-01-01")
     saved_teacher = TeacherRepo.save(teacher)
 
     assert saved_teacher.id is not None

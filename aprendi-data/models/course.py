@@ -42,7 +42,6 @@ class CourseRepo():
         """
         This method saves the Course to the database
         """
-        model.id = uuid7str()
         pk = cls.course_pk(org_id=model.org_id)
         sk = cls.course_sk(course_id=model.id)
         org = OrganizationDataTable(

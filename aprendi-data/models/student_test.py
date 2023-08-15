@@ -10,7 +10,8 @@ def test_student_crud_operations():
     3. Get all students for an organization
     """
     # 1. Save a student
-    student = StudentModel(org_id="test_org_1", first_name="Jane", last_name="Doe", dob="2002-02-02")
+    student = StudentModel(id="200", org_id="test_org_1", first_name="Jane",
+                           last_name="Doe", dob="2002-02-02")
     saved_student = StudentRepo.save(student)
 
     assert saved_student.id is not None
