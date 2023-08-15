@@ -1,29 +1,10 @@
 """
 This module contains the AprendiTable class, which is a model for the Aprendi
 """
-from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
+# from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
 
-
-# class EntityTypeIndex(GlobalSecondaryIndex):
-#     """
-#     This class represents a global secondary index (GSI)
-#     """
-#     class Meta:
-#         """
-#         This class is a meta class for the GSI
-#         """
-#         # Name of the GSI
-#         index_name = 'entity-type-index'
-#         read_capacity_units = 100
-#         write_capacity_units = 100
-#         # We'll project all attributes for simplicity, but you can modify as per your needs
-#         projection = AllProjection()
-
-#     # Attributes for the GSI
-#     entity_type = UnicodeAttribute(hash_key=True)
-#     entity_id = UnicodeAttribute(range_key=True)
 
 class OrganizationTable(Model):
     """
@@ -55,11 +36,18 @@ class OrganizationDataTable(Model):
         region = 'us-west-2'
         host = "http://localhost:8000"
 
+    # table keys
     pk = UnicodeAttribute(hash_key=True)
     sk = UnicodeAttribute(range_key=True)
 
-    # entity_type = UnicodeAttribute(null=False)
-    name = UnicodeAttribute(null=True)
+    # student, teacher
     first_name = UnicodeAttribute(null=True)
     last_name = UnicodeAttribute(null=True)
+
+    # course
+    course_name = UnicodeAttribute(null=True)
+    course_description = UnicodeAttribute(null=True)
+    course_section = UnicodeAttribute(null=True)
+
+    # other data
     data = UnicodeAttribute(null=True)

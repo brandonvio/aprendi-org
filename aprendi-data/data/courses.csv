@@ -1,100 +1,100 @@
-100,Creative Writing
-101,Biology
-102,Chemistry
-103,Physics
-104,Mathematics
-105,Computer Science
-106,History
-107,Geography
-108,English Literature
-109,Philosophy
-110,Psychology
-111,Sociology
-112,Political Science
-113,Economics
-114,Art History
-115,Music Theory
-116,Anatomy
-117,Physiology
-118,Geology
-119,Astronomy
-120,Environmental Science
-121,Marine Biology
-122,Zoology
-123,Botany
-124,Anthropology
-125,Archaeology
-126,Classical Studies
-127,Theater Arts
-128,Film Studies
-129,Journalism
-130,Communication Studies
-131,Business Administration
-132,Accounting
-133,Finance
-134,Marketing
-135,Human Resources
-136,Information Technology
-137,Software Engineering
-138,Civil Engineering
-139,Mechanical Engineering
-140,Electrical Engineering
-141,Chemical Engineering
-142,Architecture
-143,Graphic Design
-144,Industrial Design
-145,Interior Design
-146,Fashion Design
-147,Culinary Arts
-148,Nutrition
-149,Physical Education
-150,Sports Management
-151,Foreign Languages
-152,Linguistics
-153,Religious Studies
-154,Theology
-155,Medieval Studies
-156,Renaissance Studies
-157,Modern History
-158,World Cultures
-159,African Studies
-160,Asian Studies
-161,European Studies
-162,Latin American Studies
-163,Middle Eastern Studies
-164,Oceanography
-165,Meteorology
-166,Pharmacology
-167,Nursing
-168,Dentistry
-169,Medicine
-170,Veterinary Science
-171,Law
-172,Criminal Justice
-173,Social Work
-174,Public Administration
-175,Public Health
-176,Educational Studies
-177,Special Education
-178,Early Childhood Education
-179,Secondary Education
-180,Adult Education
-181,Agricultural Science
-182,Animal Science
-183,Forestry
-184,Environmental Studies
-185,Conservation
-186,Urban Planning
-187,Real Estate
-188,Transportation Studies
-189,Logistics
-190,Supply Chain Management
-191,Tourism
-192,Hotel Management
-193,Event Planning
-194,Music Production
-195,Dance
-196,Visual Arts
-197,Photography
-198,Ceramics
-199,Poetry
+100,Creative Writing,101
+101,Biology,201
+102,Chemistry,103
+103,Physics,301
+104,Mathematics,401
+105,Computer Science,101
+106,History,201
+107,Geography,103
+108,English Literature,301
+109,Philosophy,401
+110,Psychology,101
+111,Sociology,201
+112,Political Science,103
+113,Economics,301
+114,Art History,401
+115,Music Theory,101
+116,Anatomy,201
+117,Physiology,103
+118,Geology,301
+119,Astronomy,401
+120,Environmental Science,101
+121,Marine Biology,201
+122,Zoology,103
+123,Botany,301
+124,Anthropology,401
+125,Archaeology,101
+126,Classical Studies,201
+127,Theater Arts,103
+128,Film Studies,301
+129,Journalism,401
+130,Communication Studies,101
+131,Business Administration,201
+132,Accounting,103
+133,Finance,301
+134,Marketing,401
+135,Human Resources,101
+136,Information Technology,201
+137,Software Engineering,103
+138,Civil Engineering,301
+139,Mechanical Engineering,401
+140,Electrical Engineering,101
+141,Chemical Engineering,201
+142,Architecture,103
+143,Graphic Design,301
+144,Industrial Design,401
+145,Interior Design,101
+146,Fashion Design,201
+147,Culinary Arts,103
+148,Nutrition,301
+149,Physical Education,401
+150,Sports Management,101
+151,Foreign Languages,201
+152,Linguistics,103
+153,Religious Studies,301
+154,Theology,401
+155,Medieval Studies,101
+156,Renaissance Studies,201
+157,Modern History,103
+158,World Cultures,301
+159,African Studies,401
+160,Asian Studies,101
+161,European Studies,201
+162,Latin American Studies,103
+163,Middle Eastern Studies,301
+164,Oceanography,401
+165,Meteorology,101
+166,Pharmacology,201
+167,Nursing,103
+168,Dentistry,301
+169,Medicine,401
+170,Veterinary Science,101
+171,Law,201
+172,Criminal Justice,103
+173,Social Work,301
+174,Public Administration,401
+175,Public Health,101
+176,Educational Studies,201
+177,Special Education,103
+178,Early Childhood Education,301
+179,Secondary Education,401
+180,Adult Education,101
+181,Agricultural Science,201
+182,Animal Science,103
+183,Forestry,301
+184,Environmental Studies,401
+185,Conservation,101
+186,Urban Planning,201
+187,Real Estate,103
+188,Transportation Studies,301
+189,Logistics,401
+190,Supply Chain Management,101
+191,Tourism,201
+192,Hotel Management,103
+193,Event Planning,301
+194,Music Production,401
+195,Dance,101
+196,Visual Arts,201
+197,Photography,103
+198,Ceramics,301
+199,Poetry,401
