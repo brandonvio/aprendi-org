@@ -49,5 +49,8 @@ class OrganizationDataTable(Model):
     course_description = UnicodeAttribute(null=True)
     course_section = UnicodeAttribute(null=True)
 
+    # course schedule
+    term_name = UnicodeAttribute(null=True)
+
     # other data
     data = UnicodeAttribute(null=True)

@@ -3,7 +3,7 @@ This script runs the application using a development server.
 """
 from dotenv import load_dotenv
 from models.tables import OrganizationTable, OrganizationDataTable
-from seed import seed_all_data
+from models.seed import seed_all_data
 
 if __name__ == '__main__':
     load_dotenv(verbose=True)

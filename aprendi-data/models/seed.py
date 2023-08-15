@@ -7,6 +7,7 @@ from models.student import StudentRepo, StudentModel
 from models.tables import OrganizationTable, OrganizationDataTable
 from models.organization import OrganizationRepo, OrganizationModel
 from models.course import CourseRepo, CourseModel
+from models.term import TermRepo, TermModel
 from models.sentence import generate_random_sentence
 
 
@@ -131,26 +132,53 @@ def get_all_courses(org_id: str):
         print(item)
 
 
+def seed_terms(org_id: str):
+    """
+    This function seeds the course schedule
+    """
+    terms = [("202303", "Fall 2023"), ("202304", "Winter 2023"), ("202401", "Spring 2024"), ("202402", "Summer 2024")]
+    for term in terms:
+        item = TermModel(
+            org_id=org_id,
+            term_id=term[0],
+            term_name=term[1]
+        )
+        item = TermRepo.save(item)
+        item = TermRepo.get(org_id=item.org_id, id=item.term_id)
+        print(item)
+
+
+def get_all_terms(org_id: str):
+    """
+    This gets all the teachers
+    """
+    for item in TermRepo.get_all(org_id=org_id):
+        print(item)
+
 # All data
+
+
 def seed_all_data():
     """
     This seeds all the data
     """
-    empty_data_table()
+    # empty_data_table()
 
-    # organization
-    _org = OrganizationModel(id="FLA", name="Florentia Academy")
-    seed_organization(org=_org)
-    get_all_organizations()
+    # # organization
+    # _org = OrganizationModel(id="FLA", name="Florentia Academy")
+    # seed_organization(org=_org)
+    # get_all_organizations()
 
-    # teachers
-    seed_teachers(org_id=_org.id)
-    get_all_teachers(org_id=_org.id)
+    # # teachers
+    # seed_teachers(org_id=_org.id)
+    # get_all_teachers(org_id=_org.id)
 
-    # students
-    seed_students(org_id=_org.id)
-    get_all_students(org_id=_org.id)
+    # # students
+    # seed_students(org_id=_org.id)
+    # get_all_students(org_id=_org.id)
 
-    # courses
-    seed_courses(org_id=_org.id)
-    get_all_courses(org_id=_org.id)
+    # # courses
+    # seed_courses(org_id=_org.id)
+    # get_all_courses(org_id=_org.id)
+    seed_terms(org_id="FLA")
+    get_all_terms(org_id="FLA")
