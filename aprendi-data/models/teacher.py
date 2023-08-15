@@ -19,12 +19,6 @@ class TeacherModel(BaseModel):
     degree: str
     dob: str
 
-    class Config:
-        """
-        This class represents the configuration for the Teacher model
-        """
-        from_attributes = True
-
 
 class TeacherRepo():
     """

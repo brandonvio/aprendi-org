@@ -13,12 +13,6 @@ class TermModel(BaseModel):
     term_id: str
     term_name: str
 
-    class Config:
-        """
-        This class represents the configuration for the Term model
-        """
-        from_attributes = True
-
 
 class TermRepo():
     """
@@ -60,10 +54,11 @@ class TermRepo():
         """
         org_id = item.pk.split("#")[1]
         term_id = item.sk.split("#")[1]
-        return TermModel(
+        term = TermModel(
             org_id=org_id,
             term_id=term_id,
             term_name=item.term_name)
+        return term
 
     @classmethod
     def get(cls, org_id: str, id: str) -> TermModel:
@@ -86,6 +81,5 @@ class TermRepo():
         pk = cls.term_pk(org_id=org_id)
         sk = cls.term_sk(term_id="")
         items = OrganizationDataTable.query(pk, OrganizationDataTable.sk.startswith(sk))
-        for item in items:
-            print(item)
-        return [cls.parse_term(item) for item in items]
+        terms = [cls.parse_term(item) for item in items]
+        return terms

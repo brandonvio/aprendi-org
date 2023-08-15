@@ -4,6 +4,7 @@ This module contains the AprendiTable class, which is a model for the Aprendi
 # from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
+from pynamodb.indexes import LocalSecondaryIndex, AllProjection
 
 
 class OrganizationTable(Model):
@@ -24,6 +25,21 @@ class OrganizationTable(Model):
     data = UnicodeAttribute(null=True)
 
 
+class LocalSecondaryIndex1(LocalSecondaryIndex):
+    """
+    This class represents a GSI for querying by teacher_id and period.
+    """
+    class Meta:
+        """
+        This class is a meta class for the TeacherPeriodIndex
+        """
+        projection = AllProjection()
+
+    # These attributes are for the GSI's hash and range key
+    pk = UnicodeAttribute(hash_key=True)
+    lsi_sk1 = UnicodeAttribute(range_key=True)
+
+
 class OrganizationDataTable(Model):
     """
     This class is a model for the Aprendi table
@@ -33,6 +49,7 @@ class OrganizationDataTable(Model):
         This class is a meta class for the Aprendi table
         """
         table_name = "aprendi_organization_data_table"
+        index = 'teacher_period_index'
         region = 'us-west-2'
         host = "http://localhost:8000"
 
@@ -54,3 +71,9 @@ class OrganizationDataTable(Model):
 
     # other data
     data = UnicodeAttribute(null=True)
+
+    # Connect the GSI to your model
+    local_secondary_index1 = LocalSecondaryIndex1()
+
+    # gsi for teacher, period
+    lsi_sk1 = UnicodeAttribute(null=True)

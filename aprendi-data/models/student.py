@@ -18,12 +18,6 @@ class StudentModel(BaseModel):
     last_name: str
     dob: str
 
-    class Config:
-        """
-        This class represents the configuration for the Student model
-        """
-        from_attributes = True
-
 
 class StudentRepo():
     """

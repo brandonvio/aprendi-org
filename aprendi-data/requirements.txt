@@ -3,3 +3,6 @@ python-dotenv
 pydantic
 pynamodb
 uuid7
+pytest
+pytest-watch
+ptw

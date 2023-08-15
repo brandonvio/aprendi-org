@@ -17,12 +17,6 @@ class CourseModel(BaseModel):
     description: str
     section: str
 
-    class Config:
-        """
-        This class represents the configuration for the Course model
-        """
-        from_attributes = True
-
 
 class CourseRepo():
     """
