@@ -18,7 +18,7 @@ push: build
 	mkdir ./build
 	cp ./aprendi-api-exe ./build/aprendi-api-exe
 	cd build && zip -r aprendi-api.zip .
-	cd build && aws s3 cp aprendi-api.zip s3://aprendi-lambda-functions/aprendi-api/${GITHUB_SHA}/aprendi-api.zip
+	cd build && aws s3 cp aprendi-api.zip s3://aprendi-builds/aprendi-api/${GITHUB_SHA}/aprendi-api.zip
 
 generate-jwt-keys:
 	ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key

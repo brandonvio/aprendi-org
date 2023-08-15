@@ -1,2 +1,5 @@
 pynamodb
 python-dotenv
+pydantic
+pynamodb
+uuid7

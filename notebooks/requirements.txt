@@ -27,3 +27,5 @@ mongoengine
 psycopg2-binary
 sqlalchemy
 pynamodb
+uuid7
+pydantic

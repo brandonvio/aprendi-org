@@ -38,7 +38,7 @@ module "aprendi_api_lambda" {
   source          = "./lambda"
   github_sha      = var.github_sha
   lambda_exec_arn = module.aprendi_api_iam.lambda_exec_arn
-  bucket          = data.terraform_remote_state.main.outputs.aprendi_lambda_functions_bucket_name
+  bucket          = data.terraform_remote_state.main.outputs.builds_bucket_name
   region          = "us-west-2"
   account_id      = data.terraform_remote_state.main.outputs.account_id
   depends_on      = [module.aprendi_api_iam]
@@ -48,7 +48,7 @@ module "aprendi_api_api_gateway" {
   source               = "./api-gateway"
   lambda_invoke_arn    = module.aprendi_api_lambda.aprendi_api_lambda_invoke_arn
   lambda_function_name = module.aprendi_api_lambda.aprendi_api_lambda_function_name
-  ssl_certificate_arn  = data.terraform_remote_state.main.outputs.west_ssl_certifcate_arn
+  ssl_certificate_arn  = data.terraform_remote_state.main.outputs.ssl_west_certifcate_arn
   zone_id              = data.terraform_remote_state.main.outputs.zone_id
   depends_on           = [module.aprendi_api_lambda]
 }

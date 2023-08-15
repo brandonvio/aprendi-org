@@ -1,43 +1,87 @@
 """
-This file contains the model for the DynamoDB table.
+This script runs the application using a development server.
 """
-from pynamodb.models import Model
-from pynamodb.attributes import UnicodeAttribute
-from lib import get_course_schedule
+import csv
+from dotenv import load_dotenv
+from models.teacher import TeacherRepo, TeacherModel
+from models.tables import OrganizationTable, OrganizationDataTable
+from models.organization import OrganizationRepo, OrganizationModel
 
 
-class SingleTableModel(Model):
+load_dotenv(verbose=True)
+
+if not OrganizationTable.exists():
+    OrganizationTable.create_table(wait=True, read_capacity_units=5, write_capacity_units=5)
+
+if not OrganizationDataTable.exists():
+    OrganizationDataTable.create_table(wait=True, read_capacity_units=100, write_capacity_units=100)
+
+
+def get_reader(csv_filename):
     """
-    This class defines the model for the DynamoDB table.
+    This function gets the csv reader
     """
-    class Meta:
-        """
-        This class defines the metadata for the DynamoDB table.
-        """
-        table_name = "aprendi_org_db"
-        region = 'us-west-2'
-        host = "http://localhost:8000"
-    pk = UnicodeAttribute(hash_key=True)
-    sk = UnicodeAttribute(range_key=True)
-    data = UnicodeAttribute(null=True)
-
-    def semester_schedule_pk(semester_id):
-        return f"SCHEDULE#SEMESTER#{semester_id}"
-
-    def semester_schedule_sk(course_id, period_id, teacher_id):
-        return f"COURSE#{course_id}#PERIOD#{period_id}#TEACHER#{teacher_id}"
+    with open('data/' + csv_filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        return list(reader)
 
 
-def seed_students():
-    reader = get_reader("students.csv")
+def empty_data_table():
+    """
+    This function empties the table
+    """
+    for item in OrganizationDataTable.scan():
+        item.delete()
+
+
+def get_all_organizations():
+    """
+    This function gets all the organizations
+    """
+    for item in OrganizationTable.scan():
+        print(item)
+
+
+def seed_organization(org: OrganizationModel):
+    """
+    This seeds the organization data
+    """
+    org = OrganizationRepo.save(org)
+    org = OrganizationRepo.get(id="FLA")
+    print(org)
+
+
+def seed_teachers(org_id: str):
+    """
+    This seeds the teacher data
+    """
+    reader = get_reader("teachers.csv")
     for row in reader:
-        id, last, first, dob = row
-        student = SingleTableModel(pk=SingleTableModel.semester_schedule_pk(
-            id), sk=SingleTableModel.semester_schedule_sk())
-        data = {
-            "first": first,
-            "last": last,
-            "dob": dob
-        }
-        student.data = json.dumps(data)
-        student.save()
+        id, last, first, dob, degree = row
+        item = TeacherModel(
+            org_id=org_id,
+            first_name=first,
+            last_name=last,
+            degree=degree,
+            dob=dob
+        )
+        item = TeacherRepo.save(item)
+        item = TeacherRepo.get(org_id=item.org_id, id=item.id)
+        print(item)
+
+
+def get_all_teachers(org_id: str):
+    """
+    This gets all the teachers
+    """
+    for item in TeacherRepo.get_all(org_id=org_id):
+        print(item)
+
+
+if __name__ == '__main__':
+    empty_data_table()
+    _org = OrganizationModel(id="FLA", name="Florentia Academy")
+    seed_organization(org=_org)
+    get_all_organizations()
+    seed_teachers(org_id=_org.id)
+    get_all_teachers(org_id=_org.id)

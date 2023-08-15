@@ -6,15 +6,15 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket         = "aprendi-org-terraform-state"
-    key            = "infrastructure/dynamodb/aprendi_org_db/terraform.tfstate"
+    key            = "infrastructure/api/table/terraform.tfstate"
     region         = "us-west-2"
     dynamodb_table = "aprendi_terraform_locks"
     encrypt        = true
   }
 }
 
-resource "aws_dynamodb_table" "aprendi_org_db" {
-  name         = "aprendi_org_db"
+resource "aws_dynamodb_table" "aprendi_org_table" {
+  name         = "aprendi_org_table"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "pk"
   range_key    = "sk"
@@ -30,10 +30,10 @@ resource "aws_dynamodb_table" "aprendi_org_db" {
   }
 
   tags = {
-    Name = "aprendi_org_db"
+    Name = "aprendi_org_table"
   }
 }
 
 output "dynamodb_table_arn" {
-  value = aws_dynamodb_table.aprendi_org_db.arn
+  value = aws_dynamodb_table.aprendi_org_table.arn
 }
