@@ -22,6 +22,12 @@ func main() {
 		// Setting up the EnrollmentController and its route.
 		enrollmentController := ProvideEnrollmentController()
 		v1.POST("/enroll", enrollmentController.Post)
+
+		// Setting up the CourseController and its route.
+		courseController := ProvideCourseController()
+		v1.POST("/courses", courseController.Save)
+		v1.GET("/courses/:orgID/:courseID", courseController.Get)
+		v1.GET("/courses/:orgID", courseController.GetAll)
 	}
 
 	controllers.SetupSwaggerRoutes(g)

@@ -1,4 +1,22 @@
 definitions:
+  repos.CourseModel:
+    properties:
+      course_name:
+        description: Name of the course
+        type: string
+      description:
+        description: Description of the course content
+        type: string
+      id:
+        description: Unique identifier for the course
+        type: string
+      org_id:
+        description: Identifier for the organization
+        type: string
+      section:
+        description: Section or batch of the course
+        type: string
+    type: object
   repos.CourseRequest:
     properties:
       course_id:
@@ -22,6 +40,95 @@ definitions:
 info:
   contact: {}
 paths:
+  /courses:
+    post:
+      consumes:
+      - application/json
+      description: Save a new course
+      parameters:
+      - description: Course Model
+        in: body
+        name: course
+        required: true
+        schema:
+          $ref: '#/definitions/repos.CourseModel'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/repos.CourseModel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a course
+      tags:
+      - courses
+  /courses/{orgID}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all courses
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/repos.CourseModel'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all courses under an orgID
+      tags:
+      - courses
+  /courses/{orgID}/{courseID}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve course details
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgID
+        required: true
+        type: string
+      - description: Course ID
+        in: path
+        name: courseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/repos.CourseModel'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a course by orgID and courseID
+      tags:
+      - courses
   /enroll:
     post:
       consumes:

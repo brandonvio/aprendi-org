@@ -34,8 +34,9 @@ resource "aws_lambda_function" "aprendi_api" {
   role          = var.lambda_exec_arn
   environment {
     variables = {
-      REGION   = var.region
-      GIN_MODE = "release"
+      REGION            = var.region
+      GIN_MODE          = "release"
+      DYNAMODB_ENDPOINT = "http://dynamodb.${var.region}.amazonaws.com"
     }
   }
 }

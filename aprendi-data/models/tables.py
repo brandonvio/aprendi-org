@@ -7,8 +7,6 @@ from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
 from pynamodb.indexes import LocalSecondaryIndex, AllProjection
 
-env = os.environ.get('ENV', 'dev')
-
 
 class OrganizationTable(Model):
     """
@@ -20,7 +18,7 @@ class OrganizationTable(Model):
         """
         table_name = "aprendi_organization_table"
         region = 'us-west-2'
-        host = os.environ.get('DYNAMODB_HOST', 'https://dynamodb.us-west-2.amazonaws.com')
+        host = os.environ.get('DYNAMODB_ENDPOINT')
 
     pk = UnicodeAttribute(hash_key=True)
     sk = UnicodeAttribute(range_key=True)
@@ -69,7 +67,7 @@ class OrganizationDataTable(Model):
         table_name = "aprendi_organization_data_table"
         index = 'teacher_period_index'
         region = 'us-west-2'
-        host = os.environ.get('DYNAMODB_HOST', 'https://dynamodb.us-west-2.amazonaws.com')
+        host = os.environ.get('DYNAMODB_ENDPOINT')
 
     # table keys
     pk = UnicodeAttribute(hash_key=True)

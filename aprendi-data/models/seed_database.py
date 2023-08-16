@@ -137,6 +137,8 @@ class SeedDatabase:
         Executes the database seeding process.
         It seeds domain data and then creates a term schedule.
         """
+        print("OrganizationDataTable.Meta.host:", OrganizationDataTable.Meta.host)
+
         self.seed_domain_data()
 
         term_schedule_data = {

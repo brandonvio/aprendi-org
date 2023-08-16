@@ -16,6 +16,141 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/courses": {
+            "post": {
+                "description": "Save a new course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Create a course",
+                "parameters": [
+                    {
+                        "description": "Course Model",
+                        "name": "course",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/repos.CourseModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/repos.CourseModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{orgID}": {
+            "get": {
+                "description": "Retrieve all courses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Get all courses under an orgID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Organization ID",
+                        "name": "orgID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/repos.CourseModel"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{orgID}/{courseID}": {
+            "get": {
+                "description": "Retrieve course details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "Get a course by orgID and courseID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Organization ID",
+                        "name": "orgID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course ID",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/repos.CourseModel"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/enroll": {
             "post": {
                 "description": "enroll a student to a course",
@@ -75,6 +210,31 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "repos.CourseModel": {
+            "type": "object",
+            "properties": {
+                "course_name": {
+                    "description": "Name of the course",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description of the course content",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique identifier for the course",
+                    "type": "string"
+                },
+                "org_id": {
+                    "description": "Identifier for the organization",
+                    "type": "string"
+                },
+                "section": {
+                    "description": "Section or batch of the course",
+                    "type": "string"
+                }
+            }
+        },
         "repos.CourseRequest": {
             "type": "object",
             "properties": {
