@@ -1,6 +1,49 @@
+definitions:
+  repos.CourseRequest:
+    properties:
+      course_id:
+        type: string
+      priority:
+        type: integer
+    type: object
+  repos.EnrollmentRequest:
+    properties:
+      courses:
+        items:
+          $ref: '#/definitions/repos.CourseRequest'
+        type: array
+      org_id:
+        type: string
+      student_id:
+        type: string
+      term_id:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /enroll:
+    post:
+      consumes:
+      - application/json
+      description: enroll a student to a course
+      parameters:
+      - description: Enrollment Request
+        in: body
+        name: enrollment
+        required: true
+        schema:
+          $ref: '#/definitions/repos.EnrollmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Enroll a student
+      tags:
+      - students
   /example/helloworld:
     get:
       consumes:

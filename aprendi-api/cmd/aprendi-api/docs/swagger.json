@@ -4,6 +4,40 @@
         "contact": {}
     },
     "paths": {
+        "/enroll": {
+            "post": {
+                "description": "enroll a student to a course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "Enroll a student",
+                "parameters": [
+                    {
+                        "description": "Enrollment Request",
+                        "name": "enrollment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/repos.EnrollmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/example/helloworld": {
             "get": {
                 "description": "do ping",
@@ -24,6 +58,39 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "repos.CourseRequest": {
+            "type": "object",
+            "properties": {
+                "course_id": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                }
+            }
+        },
+        "repos.EnrollmentRequest": {
+            "type": "object",
+            "properties": {
+                "courses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/repos.CourseRequest"
+                    }
+                },
+                "org_id": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "term_id": {
+                    "type": "string"
                 }
             }
         }

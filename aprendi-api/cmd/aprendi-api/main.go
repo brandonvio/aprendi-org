@@ -1,41 +1,14 @@
+// Package main provides ...
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"time"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
+	"github.com/brandonvio/aprendi.org/cmd/aprendi-api/controllers"
 	"github.com/brandonvio/aprendi.org/cmd/aprendi-api/docs"
 	"github.com/gin-gonic/gin"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-var ginLambda *ginadapter.GinLambda
-
-// @BasePath /api/v1
-// PingExample godoc
-// @Summary ping example
-// @Schemes
-// @Description do ping
-// @Tags example
-// @Accept json
-// @Produce json
-// @Success 200 {string} Helloworld
-// @Router /example/helloworld [get]
-func Helloworld(g *gin.Context) {
-	g.JSON(http.StatusOK, fmt.Sprintf("hello world! it is %s", time.Now().Format(time.RFC3339)))
-}
-
-func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return ginLambda.ProxyWithContext(ctx, request)
-}
 
 func main() {
 	log.Println("starting up ##GIN## __aprendi-api__")
@@ -44,19 +17,20 @@ func main() {
 
 	v1 := g.Group("/api/v1")
 	{
-		eg := v1.Group("/example")
-		{
-			eg.GET("/helloworld", Helloworld)
-		}
+		controllers.SetupExampleRoutes(v1)
+
+		// Setting up the EnrollmentController and its route.
+		enrollmentController := ProvideEnrollmentController()
+		v1.POST("/enroll", enrollmentController.Post)
 	}
 
-	g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	controllers.SetupSwaggerRoutes(g)
+	controllers.InitGinLambda(g)
 
 	env := os.Getenv("GIN_MODE")
 	if env == "release" {
 		log.Println("starting up gin ##LAMBDA## for aprendi-api")
-		ginLambda = ginadapter.New(g)
-		lambda.Start(Handler)
+		controllers.RunLambda()
 	} else {
 		log.Println("starting up gin ##SERVER## for aprendi-api")
 		g.Run(":8090")
