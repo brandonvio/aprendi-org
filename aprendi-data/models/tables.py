@@ -8,6 +8,17 @@ from pynamodb.attributes import UnicodeAttribute, MapAttribute
 from pynamodb.indexes import LocalSecondaryIndex, AllProjection
 
 
+def get_host():
+    """
+    This function returns the host for the table
+    """
+    host = os.environ.get('DYNAMODB_ENDPOINT')
+    if host == "" or host is None:
+        return None
+    else:
+        return host
+
+
 class OrganizationTable(Model):
     """
     This class is a model for the Organization table
@@ -18,7 +29,7 @@ class OrganizationTable(Model):
         """
         table_name = "aprendi_organization_table"
         region = 'us-west-2'
-        host = os.environ.get('DYNAMODB_ENDPOINT')
+        host = get_host()
 
     pk = UnicodeAttribute(hash_key=True)
     sk = UnicodeAttribute(range_key=True)
@@ -67,7 +78,7 @@ class OrganizationDataTable(Model):
         table_name = "aprendi_organization_data_table"
         index = 'teacher_period_index'
         region = 'us-west-2'
-        host = os.environ.get('DYNAMODB_ENDPOINT')
+        host = get_host()
 
     # table keys
     pk = UnicodeAttribute(hash_key=True)

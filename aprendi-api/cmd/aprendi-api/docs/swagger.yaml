@@ -79,7 +79,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve all courses. Try "UCSD" as orgID.
+      description: Retrieve all courses. Try "LBU, SDU or OU" as orgID.
       parameters:
       - description: Organization ID
         in: path

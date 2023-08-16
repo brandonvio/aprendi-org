@@ -1,7 +1,6 @@
 package repos
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -66,17 +65,15 @@ func (er *EnrollmentRepo) enrollmentTermSK(termID string) string {
 
 // Save inserts or updates an Enrollment in the database
 func (er *EnrollmentRepo) Save(enrollment *Enrollment) error {
-	enrollmentJSON, err := json.Marshal(enrollment)
-	if err != nil {
-		return err
-	}
-
-	jsonDATA := string(enrollmentJSON)
+	dataMap := make(map[string]string)
+	dataMap["course_name"] = enrollment.CourseName
+	dataMap["teacher_name"] = enrollment.TeacherName
+	dataMap["period"] = enrollment.Period
 	data := &OrganizationData{
 		PK:     er.enrollmentPK(enrollment.OrgID, enrollment.StudentID),
 		SK:     er.enrollmentSK(enrollment.TermID, enrollment.CourseID, enrollment.EnrollmentID),
 		LSISK1: &enrollment.EnrollmentID,
-		Data:   &jsonDATA,
+		Data:   dataMap,
 	}
 	return er.baseRepo.Save(data)
 }
@@ -88,22 +85,15 @@ func (er *EnrollmentRepo) ParseEnrollment(data *OrganizationData) (*Enrollment, 
 	termID := strings.Split(data.SK, "#")[1]
 	courseID := strings.Split(data.SK, "#")[3]
 	enrollmentID := data.LSISK1
-
-	var enrollmentData Enrollment
-	err := json.Unmarshal([]byte(*data.Data), &enrollmentData)
-	if err != nil {
-		return nil, err
-	}
-
 	return &Enrollment{
 		EnrollmentID: *enrollmentID,
 		OrgID:        orgID,
 		StudentID:    studentID,
 		TermID:       termID,
 		CourseID:     courseID,
-		CourseName:   enrollmentData.CourseName,
-		TeacherName:  enrollmentData.TeacherName,
-		Period:       enrollmentData.Period,
+		CourseName:   data.Data["course_name"],
+		TeacherName:  data.Data["teacher_name"],
+		Period:       data.Data["period"],
 	}, nil
 }
 

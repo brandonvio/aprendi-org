@@ -69,7 +69,7 @@ func (c *CourseController) Get(ctx *gin.Context) {
 }
 
 // @Summary Get all courses under an orgID
-// @Description Retrieve all courses. Try "UCSD" as orgID.
+// @Description Retrieve all courses. Try "LBU, SDU or OU" as orgID.
 // @Tags courses
 // @Accept  json
 // @Produce  json

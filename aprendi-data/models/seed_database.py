@@ -53,12 +53,12 @@ class SeedDatabase:
         #     OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
         #     OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
-        if OrganizationTable.exists():
-            OrganizationTable.delete_table()
-            OrganizationDataTable.delete_table()
+        # if OrganizationTable.exists():
+        #     OrganizationTable.delete_table()
+        #     OrganizationDataTable.delete_table()
 
-        OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-        OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+        # OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+        # OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
         for item in OrganizationDataTable.scan():
             item.delete()
