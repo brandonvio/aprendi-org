@@ -105,7 +105,7 @@ For more details on setting up the development environment and the contribution 
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
-Designed and developed with ❤️ by [Brandon Vio](https://github.com/brandonvio).
+Designed and developed with ❤️ by [Brandon Vicedomini](https://github.com/brandonvio).
 
 ---
 
