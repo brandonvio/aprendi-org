@@ -1,8 +1,6 @@
 """
 This module contains the Course model and repo
 """
-from typing import Optional
-from uuid_extensions import uuid7str
 from pydantic import BaseModel
 from models.tables import OrganizationDataTable
 
@@ -11,9 +9,9 @@ class CourseModel(BaseModel):
     """
     This class represents the Course model
     """
-    id: Optional[str] = None
+    id: str = None
     org_id: str
-    name: str
+    course_name: str
     description: str
     section: str
 
@@ -47,7 +45,7 @@ class CourseRepo():
         org = OrganizationDataTable(
             pk=pk,
             sk=sk,
-            course_name=model.name,
+            course_name=model.course_name,
             course_description=model.description,
             course_section=model.section)
         org.save()  # Saving to the database
@@ -63,7 +61,7 @@ class CourseRepo():
         return CourseModel(
             id=course_id,
             org_id=org_id,
-            name=item.course_name,
+            course_name=item.course_name,
             description=item.course_description,
             section=item.course_section)
 

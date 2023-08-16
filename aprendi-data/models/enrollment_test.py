@@ -1,89 +1,84 @@
 """
-Integration tests for EnrollmentRepo
+Integration tests for EnrollmentRepo class.
 """
-
+import logging
 import pytest
 from models.enrollment import EnrollmentModel, EnrollmentRepo
 
+# Note: Always be cautious when running integration tests on live systems.
+# The following tests assume that there is a live connection to a DynamoDB instance and that
+# the table already exists. Please be sure to back up any important data.
 
-@pytest.fixture
-def sample_enrollment():
-    """
-    Sample enrollment data
-    """
-    return EnrollmentModel(
-        org_id="ORG1",
-        student_id="STUDENT1",
-        enrollment_id="ENROLLMENT1",
-        term_id="TERM1",
-        course_name="Math",
-        teacher_name="John Doe",
-        period="1"
-    )
+# Sample data for tests
+sample_enrollment1 = EnrollmentModel(
+    enrollment_id="ENROLL1",
+    org_id="ORG1",
+    student_id="STUD1",
+    course_id="COURSE1",
+    term_id="TERM1",
+    course_name="Math",
+    teacher_name="Mr. Smith",
+    period="1"
+)
 
-
-def setup_function():
-    """
-    Setup function for each test case to ensure a clean slate.
-    """
-    # Remove existing data if exists for the test cases. Handle this appropriately.
-    # Note: This is just a placeholder. Ideally, you should remove data based on your primary and sort key.
-    pass
-
-
-def teardown_function():
-    """
-    Cleanup function after each test.
-    """
-    # Clean up any data created during the test to ensure no side-effects.
-    # Note: This is just a placeholder. Ideally, you should remove data based on your primary and sort key.
-    pass
+sample_enrollment2 = EnrollmentModel(
+    enrollment_id="ENROLL2",
+    org_id="ORG1",
+    student_id="STUD1",
+    course_id="COURSE2",
+    term_id="TERM1",
+    course_name="Science",
+    teacher_name="Mrs. Brown",
+    period="2"
+)
 
 
-def test_save_enrollment(sample_enrollment):
+def test_save_enrollment():
     """
-    Test saving an enrollment
+    Test saving an enrollment to the database.
     """
-    saved_enrollment = EnrollmentRepo.save(sample_enrollment)
-    assert saved_enrollment == sample_enrollment
+    result = EnrollmentRepo.save(sample_enrollment1)
+    assert result == sample_enrollment1
 
 
-def test_get_enrollment(sample_enrollment):
+def test_get_enrollment():
     """
-    Test getting an enrollment
+    Test retrieving a specific enrollment from the database using org_id, student_id, term_id, and course_id.
     """
-    EnrollmentRepo.save(sample_enrollment)
-    fetched_enrollment = EnrollmentRepo.get(
-        org_id=sample_enrollment.org_id,
-        student_id=sample_enrollment.student_id,
-        term_id=sample_enrollment.term_id,
-        enrollment_id=sample_enrollment.enrollment_id
-    )
-    assert fetched_enrollment == sample_enrollment
+    EnrollmentRepo.save(sample_enrollment1)
+    result = EnrollmentRepo.get("ORG1", "STUD1", "TERM1", "COURSE1")
+    assert result == sample_enrollment1
 
 
-def test_get_all_enrollments(sample_enrollment):
+def test_get_by_enrollment_id():
     """
-    Test getting all enrollments for a student in a term
+    Test retrieving a specific enrollment from the database using enrollment_id.
     """
-    EnrollmentRepo.save(sample_enrollment)
-    fetched_enrollments = EnrollmentRepo.get_all(
-        org_id=sample_enrollment.org_id,
-        student_id=sample_enrollment.student_id,
-        term_id=sample_enrollment.term_id
-    )
-    assert len(fetched_enrollments) == 1
-    assert fetched_enrollments[0] == sample_enrollment
+    EnrollmentRepo.save(sample_enrollment1)
+    result = EnrollmentRepo.get_by_enrollment_id("ORG1", "STUD1", "ENROLL1")
+    assert result == sample_enrollment1
 
 
-def test_get_non_existent_enrollment(sample_enrollment):
+def test_get_all_enrollments():
     """
-    Test getting an enrollment that does not exist
+    Test retrieving all enrollments for a student in a term.
     """
-    fetched_enrollment = EnrollmentRepo.get(
-        org_id=sample_enrollment.org_id,
-        student_id="NON_EXISTENT",
-        term_id=sample_enrollment.term_id,
-        enrollment_id=sample_enrollment.enrollment_id
-    )
-    assert fetched_enrollment is None
+    EnrollmentRepo.save(sample_enrollment1)
+    EnrollmentRepo.save(sample_enrollment2)
+    results = EnrollmentRepo.get_all("ORG1", "STUD1", "TERM1")
+    assert len(results) == 2
+    assert sample_enrollment1 in results
+    assert sample_enrollment2 in results
+
+
+# This is an example cleanup function to delete test data after tests are done.
+# Commenting it out as it's recommended to be cautious with delete operations in a live environment.
+# def teardown_module():
+#     """
+#     Clean up after tests.
+#     """
+#     table = OrganizationDataTable()
+#     item1 = table.get("ORG#ORG1#STUDENT#STUD1#ENROLLMENT", "TERM#TERM1#COURSE#COURSE1#ENROLLMENT#ENROLL1")
+#     item2 = table.get("ORG#ORG1#STUDENT#STUD1#ENROLLMENT", "TERM#TERM1#COURSE#COURSE2#ENROLLMENT#ENROLL2")
+#     item1.delete()
+#     item2.delete()

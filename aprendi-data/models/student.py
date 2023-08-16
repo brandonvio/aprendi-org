@@ -2,7 +2,6 @@
 This module contains the Student model and repo
 """
 import json
-from typing import Optional
 from pydantic import BaseModel
 from models.tables import OrganizationDataTable
 
@@ -11,7 +10,7 @@ class StudentModel(BaseModel):
     """
     This class represents the Student model
     """
-    id: Optional[str] = None
+    id: str = None
     org_id: str
     first_name: str
     last_name: str

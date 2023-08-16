@@ -1,4 +1,5 @@
 # test_utils.py
+import os
 import logging
 import pytest
 from models.tables import OrganizationDataTable, OrganizationTable
@@ -18,12 +19,13 @@ def dynamodb_local():
 @pytest.fixture(scope='session', autouse=True)
 def setup_table():
     """Set up the table before tests and tear it down after."""
-    log.warning("############## setting up table ####################")
+    log.warning("########### setting up table ###########")
+    log.warning(f"########### DYNAMODB_HOST: {os.environ['DYNAMODB_HOST']} ###########")
+
     if not OrganizationTable.exists():
         OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
         OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
     yield  # This is where the testing happens.
-
     OrganizationTable.delete_table()
     OrganizationDataTable.delete_table()

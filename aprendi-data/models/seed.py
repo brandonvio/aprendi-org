@@ -115,7 +115,7 @@ def seed_courses(org_id: str):
         id, name, section = row
         item = CourseModel(
             org_id=org_id,
-            name=name,
+            course_name=name,
             section=section,
             description=generate_random_sentence()
         )

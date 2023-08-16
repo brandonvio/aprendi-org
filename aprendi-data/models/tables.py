@@ -2,9 +2,12 @@
 This module contains the AprendiTable class, which is a model for the Aprendi
 """
 # from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
+import os
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
 from pynamodb.indexes import LocalSecondaryIndex, AllProjection
+
+env = os.environ.get('ENV', 'dev')
 
 
 class OrganizationTable(Model):
@@ -17,7 +20,7 @@ class OrganizationTable(Model):
         """
         table_name = "aprendi_organization_table"
         region = 'us-west-2'
-        host = "http://localhost:8000"
+        host = os.environ.get('DYNAMODB_HOST', 'https://dynamodb.us-west-2.amazonaws.com')
 
     pk = UnicodeAttribute(hash_key=True)
     sk = UnicodeAttribute(range_key=True)
@@ -31,7 +34,7 @@ class LocalSecondaryIndex1(LocalSecondaryIndex):
     """
     class Meta:
         """
-        This class is a meta class for the TeacherPeriodIndex
+        This class is a meta class for LocalSecondaryIndex1
         """
         projection = AllProjection()
 
@@ -46,7 +49,7 @@ class LocalSecondaryIndex2(LocalSecondaryIndex):
     """
     class Meta:
         """
-        This class is a meta class for the TeacherPeriodIndex
+        This class is a meta class for LocalSecondaryIndex2
         """
         projection = AllProjection()
 
@@ -66,7 +69,7 @@ class OrganizationDataTable(Model):
         table_name = "aprendi_organization_data_table"
         index = 'teacher_period_index'
         region = 'us-west-2'
-        host = "http://localhost:8000"
+        host = os.environ.get('DYNAMODB_HOST', 'https://dynamodb.us-west-2.amazonaws.com')
 
     # table keys
     pk = UnicodeAttribute(hash_key=True)

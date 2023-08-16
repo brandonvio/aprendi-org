@@ -2,8 +2,6 @@
 This module contains the Teacher model and repo
 """
 import json
-from typing import Optional
-from uuid_extensions import uuid7str
 from pydantic import BaseModel
 from models.tables import OrganizationDataTable
 
@@ -12,7 +10,7 @@ class TeacherModel(BaseModel):
     """
     This class represents the Teacher model
     """
-    id: Optional[str] = None
+    id: str = None
     org_id: str
     first_name: str
     last_name: str

@@ -6,3 +6,4 @@ uuid7
 pytest
 pytest-watch
 ptw
+pytest-dotenv
