@@ -1,5 +1,5 @@
 """
-This script runs the application using a development server.
+This script seeds the database with the data from the data folder.
 """
 import os
 from dotenv import load_dotenv

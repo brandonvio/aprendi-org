@@ -42,3 +42,10 @@ func ProvideCourseController() *controllers.CourseController {
 	courseRepo := repos.NewCourseRepo(ProvideDataRepo())
 	return controllers.NewCourseController(courseRepo)
 }
+
+// ProvideOrganizationController provides an OrganizationController
+func ProvideOrganizationController() *controllers.OrganizationController {
+	dynamoDb := ProvideDynamoDb()
+	organizationRepo := repos.NewOrganizationRepo(dynamoDb, "aprendi_organization_table")
+	return controllers.NewOrganizationController(organizationRepo)
+}

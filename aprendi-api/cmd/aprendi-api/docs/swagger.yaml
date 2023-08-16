@@ -37,6 +37,13 @@ definitions:
       term_id:
         type: string
     type: object
+  repos.OrganizationModel:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -166,4 +173,81 @@ paths:
       summary: ping example
       tags:
       - example
+  /organizations:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all organizations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/repos.OrganizationModel'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all organizations
+      tags:
+      - organizations
+    post:
+      consumes:
+      - application/json
+      description: Save a new organization
+      parameters:
+      - description: Organization Model
+        in: body
+        name: organization
+        required: true
+        schema:
+          $ref: '#/definitions/repos.OrganizationModel'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/repos.OrganizationModel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create an organization
+      tags:
+      - organizations
+  /organizations/{orgID}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve organization details
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/repos.OrganizationModel'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get an organization by its ID
+      tags:
+      - organizations
 swagger: "2.0"
