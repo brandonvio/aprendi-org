@@ -1,6 +1,6 @@
 # Aprendi.org - Multi-Organization Course Enrollment System
 
-![Banner Image](https://aprendi.org/banner.jpg)
+![Banner Image](https://aprendi.org/aprendi-logo.jpg)
 
 Welcome to **Aprendi.org**, a cutting-edge system tailored for the administration and management of students, teachers, courses, and enrollments across multiple organizations.
 
@@ -39,7 +39,7 @@ Welcome to **Aprendi.org**, a cutting-edge system tailored for the administratio
 
 The system is primarily hosted on AWS, utilizing services such as Lambda for serverless compute and DynamoDB for database management. Everything from the infrastructure to the application layer has been defined with precision, scalability, and robustness in mind.
 
-![System Architecture Diagram](https://aprendi.org/architecture.jpg)
+![System Architecture Diagram](https://aprendi.org/aprendi-arch.png)
 
 ---
 
