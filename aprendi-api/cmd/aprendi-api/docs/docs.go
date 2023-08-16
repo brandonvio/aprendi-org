@@ -61,7 +61,7 @@ const docTemplate = `{
         },
         "/courses/{orgID}": {
             "get": {
-                "description": "Retrieve all courses",
+                "description": "Retrieve all courses. Try \"UCSD\" as orgID.",
                 "consumes": [
                     "application/json"
                 ],
