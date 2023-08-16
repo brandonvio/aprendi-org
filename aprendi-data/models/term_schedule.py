@@ -1,7 +1,6 @@
 """
 This module contains the TermSchedule model and repo
 """
-import json
 from typing import List, Optional
 from uuid_extensions import uuid7str
 from pydantic import BaseModel
@@ -87,7 +86,7 @@ class TermScheduleRepo():
             sk=sk,
             lsi_sk1=cls.teacher_period_sk(period_number=model.period, teacher_id=model.teacher_id),
             lsi_sk2=term_schedule_id,
-            data=json.dumps(data)
+            data=data
         )
         org.save()  # Saving to the database
         return model
@@ -102,7 +101,7 @@ class TermScheduleRepo():
         term_schedule_id = item.lsi_sk2
         org_id, term_id = pk_split[1], pk_split[3]
         course_id, period_number, teacher_id = sk_split[1], sk_split[3], sk_split[5]
-        data = json.loads(item.data)
+        data = item.data
 
         return TermScheduleModel(
             term_schedule_id=term_schedule_id,

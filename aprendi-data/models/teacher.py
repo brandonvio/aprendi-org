@@ -1,7 +1,6 @@
 """
 This module contains the Teacher model and repo
 """
-import json
 from pydantic import BaseModel
 from models.tables import OrganizationDataTable
 
@@ -53,7 +52,7 @@ class TeacherRepo():
             sk=sk,
             first_name=model.first_name,
             last_name=model.last_name,
-            data=json.dumps(data))
+            data=data)
         org.save()  # Saving to the database
         return model
 
@@ -64,7 +63,7 @@ class TeacherRepo():
         """
         org_id = item.pk.split("#")[1]
         teacher_id = item.sk.split("#")[1]
-        data = json.loads(item.data)
+        data = item.data
         return TeacherModel(
             id=teacher_id,
             org_id=org_id,

@@ -4,7 +4,7 @@ This module contains the AprendiTable class, which is a model for the Aprendi
 # from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 import os
 from pynamodb.models import Model
-from pynamodb.attributes import UnicodeAttribute
+from pynamodb.attributes import UnicodeAttribute, MapAttribute
 from pynamodb.indexes import LocalSecondaryIndex, AllProjection
 
 
@@ -86,7 +86,7 @@ class OrganizationDataTable(Model):
     term_name = UnicodeAttribute(null=True)
 
     # other data
-    data = UnicodeAttribute(null=True)
+    data = MapAttribute(null=True)
 
     # local secondary index 1
     local_secondary_index1 = LocalSecondaryIndex1()

@@ -77,7 +77,7 @@ class EnrollmentRepo():
             pk=pk,
             sk=sk,
             lsi_sk1=model.enrollment_id,
-            data=json.dumps(data))
+            data=data)
         org.save()  # Saving to the database
         return model
 
@@ -91,7 +91,7 @@ class EnrollmentRepo():
         term_id = item.sk.split("#")[1]
         course_id = item.sk.split("#")[3]
         enrollment_id = item.lsi_sk1
-        data = json.loads(item.data)
+        data = item.data
         course_name = data["course_name"]
         teacher_name = data["teacher_name"]
         period = data["period"]

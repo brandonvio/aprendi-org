@@ -5,7 +5,9 @@ This module contains the logic to seed the database with a term schedule.
 It sets up the necessary tables, populates them with domain data, and finally
 creates term schedules using the populated data.
 """
-
+import csv
+import random
+from typing import List
 from collections import namedtuple
 from models.tables import OrganizationDataTable, OrganizationTable
 from models.course import CourseModel, CourseRepo
@@ -16,9 +18,13 @@ from models.term_schedule import TermScheduleModel, TermScheduleRepo
 from models.organization import OrganizationModel, OrganizationRepo
 from models.sentence import generate_random_sentence
 
+Org = namedtuple('Org', ['id', 'name', 'teacher_num', 'student_num', 'course_num'])
 Enrollment = namedtuple('Enrollment', ['org_id', 'term_id', 'student_id', 'courses'])
-Course = namedtuple('Course', ['period', 'course_id', 'teacher_id'])
 TermSchedule = namedtuple('TermSchedule', ['org_id', 'term_id', 'courses'])
+Course = namedtuple('Course', ['id', 'course_name', 'section'])
+Teacher = namedtuple('Teacher', ['id', 'last_name', 'first_name', 'dob', 'degree'])
+Student = namedtuple('Student', ['id', 'last_name', 'first_name', 'dob'])
+Term = namedtuple('Term', ['id', 'name'])
 
 
 class SeedDatabase:
@@ -31,6 +37,11 @@ class SeedDatabase:
         """
         Initializes the SeedDatabase class and sets up the database tables.
         """
+        self.org_data: List[Org] = []
+        self.teacher_data: List[Teacher] = []
+        self.student_data: List[Student] = []
+        self.course_data: List[Course] = []
+        self.term_data: List[Term] = []
         self.setup()
 
     def setup(self):
@@ -38,9 +49,16 @@ class SeedDatabase:
         Sets up the database tables if they don't exist, 
         and deletes existing data from these tables.
         """
-        if not OrganizationTable.exists():
-            OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-            OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+        # if not OrganizationTable.exists():
+        #     OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+        #     OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+
+        if OrganizationTable.exists():
+            OrganizationTable.delete_table()
+            OrganizationDataTable.delete_table()
+
+        OrganizationTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+        OrganizationDataTable.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
         for item in OrganizationDataTable.scan():
             item.delete()
@@ -48,89 +66,25 @@ class SeedDatabase:
         for item in OrganizationTable.scan():
             item.delete()
 
-    def seed_domain_data(self):
-        """
-        Seeds the domain data such as organizations, teachers, students, 
-        courses, and terms into the database.
-        """
-        org_data = {"id": "UCSD", "name": "University of California San Diego"}
+        reader = self.get_reader("teachers.csv")
+        for row in reader:
+            self.teacher_data.append(Teacher(*row))
 
-        teacher_data = [
-            "100,Williams,Liam,1985-09-15,Masters of Science in Computer Science",
-            "101,Johnson,Olivia,1994-07-21,PhD in Linguistics",
-            "102,Smith,Noah,1988-03-10,Masters of Business Administration",
-            "103,Brown,Emma,1979-12-05,Masters of Science in Electrical Engineering",
-            "104,Jones,Lucas,1998-11-18,PhD in Psychology",
-            "105,Garcia,Ava,1982-06-25,Masters of Arts in History",
-            "106,Miller,Mia,1996-02-09,Masters of Science in Biology",
-            "107,Davis,Ethan,1989-10-31,PhD in Economics",
-            "108,Rodriguez,Isabella,1977-08-14,Masters of Fine Arts in Creative Writing"
-        ]
+        reader = self.get_reader("students.csv")
+        for row in reader:
+            self.student_data.append(Student(*row))
 
-        student_data = [
-            "100,Williams,Liam,1985-09-15",
-            "101,Johnson,Olivia,1994-07-21",
-            "102,Smith,Noah,1988-03-10",
-            "103,Brown,Emma,1979-12-05",
-            "104,Jones,Lucas,1998-11-18",
-            "105,Garcia,Ava,1982-06-25",
-            "106,Miller,Mia,1996-02-09",
-            "107,Davis,Ethan,1989-10-31",
-            "108,Rodriguez,Isabella,1977-08-14"
-        ]
+        reader = self.get_reader("courses.csv")
+        for row in reader:
+            self.course_data.append(Course(*row))
 
-        course_data = [
-            "100,Creative Writing,101",
-            "101,Biology,201",
-            "102,Chemistry,103",
-            "103,Physics,301",
-            "104,Mathematics,401",
-            "105,Computer Science,101",
-            "106,History,201",
-            "107,Geography,103",
-            "108,English Literature,301"
-        ]
+        reader = self.get_reader("orgs.csv")
+        for row in reader:
+            self.org_data.append(Org(*row))
 
-        term_data = [("202303", "Fall 2023"), ("202304", "Winter 2023"), ("202401", "Spring 2024"), ("202402", "Summer 2024")]
-
-        org = OrganizationModel(id=org_data["id"], name=org_data["name"])
-        org = OrganizationRepo.save(org)
-
-        for item in teacher_data:
-            id, first, last, dob, degree = item.split(",")
-            TeacherRepo.save(TeacherModel(id=id, first_name=first, last_name=last, dob=dob, degree=degree, org_id=org.id))
-
-        for item in student_data:
-            id, first, last, dob = item.split(",")
-            StudentRepo.save(StudentModel(id=id, first_name=first, last_name=last, dob=dob, org_id=org.id))
-
-        for item in course_data:
-            id, course_name, section = item.split(",")
-            CourseRepo.save(CourseModel(id=id, course_name=course_name, section=section, description=generate_random_sentence(), org_id=org.id))
-
-        for item in term_data:
-            term_id, term_name = item
-            TermRepo.save(TermModel(term_id=term_id, term_name=term_name, org_id=org.id))
-
-    def create_term_schedule(self, schedule: TermSchedule):
-        """
-        Creates a term schedule using the provided schedule information.
-
-        Args:
-        - schedule (TermSchedule): A namedtuple containing the organization, term, and courses info.
-        """
-        for course_t in schedule.courses:
-            course_m = CourseRepo.get(org_id=schedule.org_id, id=course_t.course_id)
-            teacher_m = TeacherRepo.get(org_id=schedule.org_id, id=course_t.teacher_id)
-            term_schedule_model = TermScheduleModel(
-                org_id=schedule.org_id,
-                term_id=schedule.term_id,
-                course_id=course_t.course_id,
-                teacher_id=course_t.teacher_id,
-                period=course_t.period,
-                course_name=course_m.course_name,
-                teacher_name=f"{teacher_m.first_name} {teacher_m.last_name}")
-            TermScheduleRepo.save(term_schedule_model)
+        terms = [("202303", "Fall 2023"), ("202304", "Winter 2023"), ("202401", "Spring 2024"), ("202402", "Summer 2024")]
+        for item in terms:
+            self.term_data.append(Term(*item))
 
     def run(self):
         """
@@ -138,52 +92,145 @@ class SeedDatabase:
         It seeds domain data and then creates a term schedule.
         """
         print("OrganizationDataTable.Meta.host:", OrganizationDataTable.Meta.host)
+        self.seed_orgs()
+        for org in self.org_data:
+            self.seed_teachers(org.id, int(org.teacher_num))
+            self.seed_students(org.id, int(org.student_num))
+            self.seed_courses(org.id, int(org.course_num))
+            self.seed_terms(org.id)
+            self.seed_term_schedule(org.id)
+            # print("teachers:", TeacherRepo.get_all(org_id=org.id))
+            # print("students:", StudentRepo.get_all(org_id=org.id))
 
-        self.seed_domain_data()
+    def seed_orgs(self):
+        """
+        Seeds the organization data into the database.
+        """
+        for item in self.org_data:
+            item = OrganizationModel(
+                id=item.id,
+                name=item.name
+            )
+            item = OrganizationRepo.save(item)
 
-        term_schedule_data = {
-            "org_id": "UCSD",
-            "term_id": "202303",
-            "courses": [
-                {"period": "1", "course_id": "100", "teacher_id": "100"},
-                {"period": "1", "course_id": "101", "teacher_id": "101"},
-                {"period": "1", "course_id": "102", "teacher_id": "102"},
-                {"period": "1", "course_id": "103", "teacher_id": "103"},
-                {"period": "1", "course_id": "104", "teacher_id": "104"},
-                {"period": "2", "course_id": "100", "teacher_id": "100"},
-                {"period": "2", "course_id": "101", "teacher_id": "101"},
-                {"period": "2", "course_id": "102", "teacher_id": "102"},
-                {"period": "2", "course_id": "103", "teacher_id": "103"},
-                {"period": "2", "course_id": "104", "teacher_id": "104"},
-                {"period": "3", "course_id": "100", "teacher_id": "100"},
-                {"period": "3", "course_id": "101", "teacher_id": "101"},
-                {"period": "3", "course_id": "102", "teacher_id": "102"},
-                {"period": "3", "course_id": "103", "teacher_id": "103"},
-                {"period": "3", "course_id": "104", "teacher_id": "104"},
-                {"period": "4", "course_id": "100", "teacher_id": "100"},
-                {"period": "4", "course_id": "101", "teacher_id": "101"},
-                {"period": "4", "course_id": "102", "teacher_id": "102"},
-                {"period": "4", "course_id": "103", "teacher_id": "103"},
-                {"period": "4", "course_id": "104", "teacher_id": "104"},
-                {"period": "5", "course_id": "105", "teacher_id": "105"},
-                {"period": "5", "course_id": "106", "teacher_id": "106"},
-                {"period": "5", "course_id": "107", "teacher_id": "107"},
-                {"period": "5", "course_id": "108", "teacher_id": "108"},
-                {"period": "6", "course_id": "105", "teacher_id": "105"},
-                {"period": "6", "course_id": "106", "teacher_id": "106"},
-                {"period": "6", "course_id": "107", "teacher_id": "107"},
-                {"period": "6", "course_id": "108", "teacher_id": "108"},
-                {"period": "7", "course_id": "105", "teacher_id": "105"},
-                {"period": "7", "course_id": "106", "teacher_id": "106"},
-                {"period": "7", "course_id": "107", "teacher_id": "107"},
-                {"period": "7", "course_id": "108", "teacher_id": "108"}
-            ]
-        }
+    def seed_teachers(self, org_id: str, num: int):
+        """
+        Seeds the teacher data into the database.
+        """
+        selected_indices = random.sample(range(len(self.teacher_data)), num)
+        # print("teachers#", selected_indices)
+        for i in selected_indices:
+            item = self.teacher_data[i]
+            item = TeacherModel(
+                org_id=org_id,
+                id=item.id,
+                first_name=item.first_name,
+                last_name=item.last_name,
+                degree=item.degree,
+                dob=item.dob
+            )
+            item = TeacherRepo.save(item)
 
-        courses = [Course(**course_data) for course_data in term_schedule_data['courses']]
-        term_schedule_namedtuple = TermSchedule(org_id=term_schedule_data['org_id'], term_id=term_schedule_data['term_id'], courses=courses)
-        self.create_term_schedule(term_schedule_namedtuple)
+    def seed_students(self, org_id: str, num: int):
+        """
+        Seeds the teacher data into the database.
+        """
+        selected_indices = random.sample(range(len(self.student_data)), num)
+        # print("students#", selected_indices)
+        for i in selected_indices:
+            item = self.student_data[i]
+            item = StudentModel(
+                org_id=org_id,
+                id=item.id,
+                first_name=item.first_name,
+                last_name=item.last_name,
+                dob=item.dob
+            )
+            item = StudentRepo.save(item)
 
-        schedule = TermScheduleRepo.get(org_id="UCSD", term_id="202303")
-        for row in schedule:
-            print(row)
+    def seed_courses(self, org_id: str, num: int):
+        """
+        Seeds the teacher data into the database.
+        """
+        selected_indices = random.sample(range(len(self.course_data)), num)
+        for i in selected_indices:
+            item = self.course_data[i]
+            item = CourseModel(
+                org_id=org_id,
+                id=item.id,
+                course_name=item.course_name,
+                section=item.section,
+                description=generate_random_sentence()
+            )
+            item = CourseRepo.save(item)
+
+    def seed_terms(self, org_id: str):
+        """
+        Seeds the domain data such as organizations, teachers, students, 
+        courses, and terms into the database.
+        """
+        for item in self.term_data:
+            TermRepo.save(TermModel(term_id=item.id, term_name=item.name, org_id=org_id))
+
+    def is_teacher_available(self, org_id, teacher_id: str, term_id: str, period: str):
+        """
+        Checks if the teacher is available for the given term and period.
+        """
+        result = TermScheduleRepo.get_by_teacher_id_and_period(
+            org_id=org_id,
+            teacher_id=teacher_id,
+            term_id=term_id,
+            period=period)
+        return len(result) == 0
+
+    def get_teacher(self, teachers: List[TeacherModel], org_id: str, term_id: str, period: str):
+        """
+        Gets a teacher for the given term and period.
+        """
+        teacher = None
+        while True:
+            teacher = random.choice(teachers)
+            if self.is_teacher_available(org_id, teacher.id, term_id, period):
+                break
+        return teacher
+
+    def seed_term_schedule(self, org_id: str):
+        """
+        This method creates a term schedule for the given organization and term.
+        """
+        periods = ["1", "2", "3", "4", "5", "6", "7", "8"]
+        terms = TermRepo.get_all(org_id=org_id)
+        courses = CourseRepo.get_all(org_id=org_id)
+        teachers = TeacherRepo.get_all(org_id=org_id)
+        students = StudentRepo.get_all(org_id=org_id)
+        print(str.format("orgid:{3}terms#:{0}, courses#:{1}, teachers#:{2}, students#:{4}", len(terms), len(courses), len(teachers), org_id, len(students)))
+        for term in terms:
+            print("term:", term)
+            for _ in range(len(courses)):
+                for period in periods:
+                    _course = courses[random.randint(0, len(courses) - 1)]
+                    teacher = self.get_teacher(teachers, org_id=org_id, term_id=term.term_id, period=period)
+                    item = TermScheduleModel(
+                        org_id=org_id,
+                        term_id=term.term_id,
+                        period=period,
+                        course_id=_course.id,
+                        teacher_id=teacher.id,
+                        course_name=_course.course_name,
+                        teacher_name=teacher.first_name + " " + teacher.last_name
+                    )
+                    item = TermScheduleRepo.save(item)
+
+        for term in terms:
+            schedule = TermScheduleRepo.get(org_id=org_id, term_id=term.term_id)
+            print("Getting schedule for term:", org_id, term, len(schedule))
+            for row in schedule:
+                print(row)
+
+    def get_reader(self, csv_filename):
+        """
+        This function gets the csv reader
+        """
+        with open('data/' + csv_filename, 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            return list(reader)

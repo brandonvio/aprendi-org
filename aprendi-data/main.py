@@ -8,6 +8,6 @@ from models.seed_database import SeedDatabase
 
 if __name__ == '__main__':
     load_dotenv(verbose=True)
-    print("DYNAMODB_HOST:", os.environ.get('DYNAMODB_HOST'))
+    print("DYNAMODB_ENDPOINT:", os.environ.get('DYNAMODB_ENDPOINT'))
     seeder = SeedDatabase()
     seeder.run()

@@ -125,8 +125,8 @@ def test_parse_term():
             pk=f"ORG#{ORG_ID}#TERM#{TERM_ID}#SCHEDULE",
             sk=f"COURSE#{detail['course_id']}#PERIOD#{detail['period']}#TEACHER#{detail['teacher_id']}",
             lsi_sk2=uuid7str(),
-            data=json.dumps({"course_name": detail["course_name"],
-                            "teacher_name": detail["teacher_name"]})
+            data={"course_name": detail["course_name"],
+                  "teacher_name": detail["teacher_name"]}
         )
 
         parsed_model = TermScheduleRepo.parse_term(item_mock)
