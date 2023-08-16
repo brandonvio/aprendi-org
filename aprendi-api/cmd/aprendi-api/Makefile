@@ -14,7 +14,7 @@ build: test
 run: build
 	go run .
 
-push: build
+deploy: build
 	mkdir ./build
 	cp ./aprendi-api-exe ./build/aprendi-api-exe
 	cd build && zip -r aprendi-api.zip .

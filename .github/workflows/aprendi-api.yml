@@ -26,11 +26,11 @@ jobs:
           with:
             terraform_version: 1.0.3
         
-        - name: build and push to S3
+        - name: build and push new version to S3
           working-directory: aprendi-api/cmd/aprendi-api
-          run: make push
+          run: make deploy
 
-        - name: user-api - apply terraform
+        - name: run terraform
           working-directory: aprendi-api/terraform
           run: make deploy
         
