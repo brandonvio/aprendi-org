@@ -12,7 +12,7 @@ Welcome to **Aprendi.org**, a cutting-edge system tailored for the administratio
     - [Table of Contents](#table-of-contents)
     - [Features](#features)
     - [Architecture Overview](#architecture-overview)
-    - [Getting Started (not actual setup instructions... I'll update this soon to represent actual setup process...)](#getting-started-not-actual-setup-instructions-ill-update-this-soon-to-represent-actual-setup-process)
+    - [Getting Started](#getting-started)
     - [Usage \& Endpoints](#usage--endpoints)
 
 ---
@@ -39,7 +39,7 @@ The system is primarily hosted on AWS, utilizing services such as Lambda for ser
 
 ---
 
-### Getting Started (not actual setup instructions... I'll update this soon to represent actual setup process...)
+### Getting Started
 
 1. **Clone the Repository**
     ```bash
