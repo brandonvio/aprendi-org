@@ -13,6 +13,8 @@ import (
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/brandonvio/aprendi.org/cmd/aprendi-api/docs"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var ginLambda *ginadapter.GinLambda
@@ -48,8 +50,7 @@ func main() {
 		}
 	}
 
-	// g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	// http.ListenAndServe(":8080", g)
+	g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	env := os.Getenv("GIN_MODE")
 	if env == "release" {
