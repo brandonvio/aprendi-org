@@ -164,21 +164,21 @@ def seed_all_data():
     """
     # empty_data_table()
 
-    # # organization
-    # _org = OrganizationModel(id="FLA", name="Florentia Academy")
-    # seed_organization(org=_org)
-    # get_all_organizations()
+    # organization
+    _org = OrganizationModel(id="FLA", name="Florentia Academy")
+    seed_organization(org=_org)
+    get_all_organizations()
 
-    # # teachers
-    # seed_teachers(org_id=_org.id)
-    # get_all_teachers(org_id=_org.id)
+    # teachers
+    seed_teachers(org_id=_org.id)
+    get_all_teachers(org_id=_org.id)
 
-    # # students
-    # seed_students(org_id=_org.id)
-    # get_all_students(org_id=_org.id)
+    # students
+    seed_students(org_id=_org.id)
+    get_all_students(org_id=_org.id)
 
-    # # courses
-    # seed_courses(org_id=_org.id)
-    # get_all_courses(org_id=_org.id)
+    # courses
+    seed_courses(org_id=_org.id)
+    get_all_courses(org_id=_org.id)
     seed_terms(org_id="FLA")
     get_all_terms(org_id="FLA")
